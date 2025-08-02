@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengukur Wibu dan Karbit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animasi fade-in untuk hasil */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        /* Custom styling untuk progress bar */
+        .progress-bar-wibu {
+            background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+        }
+        .progress-bar-karbit {
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+    <div class="container mx-auto p-6 max-w-md w-full bg-gray-800 rounded-2xl shadow-xl">
+        <h1 class="text-3xl font-bold text-white mb-6 text-center">Pengukur Wibu & Karbit</h1>
+        <p class="text-gray-300 mb-6 text-center">Masukkan nama kamu untuk mengukur seberapa wibu dan karbit kamu!</p>
+        <div class="flex flex-col gap-4">
+            <input type="text" id="nama" placeholder="Masukkan nama" class="p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required oninput="checkNama()">
+            <button id="ukurButton" onclick="ukurWibuKarbit()" class="p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300">Ukur Sekarang!</button>
+        </div>
+        <div id="result" class="mt-6 text-white"></div>
+    </div>
+
+    <script>
+        let lastNama = '';
+
+        function ukurWibuKarbit() {
+            const nama = document.getElementById('nama').value.trim();
+            const ukurButton = document.getElementById('ukurButton');
+
+            if (nama === '') {
+                alert('Silakan masukkan nama!');
+                return;
+            }
+
+            // Simpan nama terakhir dan nonaktifkan tombol
+            lastNama = nama;
+            ukurButton.disabled = true;
+            ukurButton.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Menghasilkan persentase secara acak
+            const wibuPersen = Math.floor(Math.random() * 101);
+            const karbitPersen = 100 - wibuPersen;
+
+            // Menampilkan hasil dengan animasi dan progress bar
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('fade-in');
+            resultDiv.innerHTML = `
+                <p class="text-lg font-semibold mb-4">Hai ${nama}!</p>
+                <div class="mb-4">
+                    <p>Tingkat Wibu: ${wibuPersen}%</p>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div class="progress-bar-wibu h-4 rounded-full" style="width: ${wibuPersen}%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p>Tingkat Karbit: ${karbitPersen}%</p>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div class="progress-bar-karbit h-4 rounded-full" style="width: ${karbitPersen}%"></div>
+                    </div>
+                </div>
+            `;
+
+            // Reset animasi untuk interaksi berikutnya
+            setTimeout(() => resultDiv.classList.remove('fade-in'), 500);
+        }
+
+        function checkNama() {
+            const nama = document.getElementById('nama').value.trim();
+            const ukurButton = document.getElementById('ukurButton');
+
+            // Aktifkan tombol hanya jika nama berbeda dari nama terakhir
+            if (nama !== lastNama && nama !== '') {
+                ukurButton.disabled = false;
+                ukurButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                ukurButton.disabled = true;
+                ukurButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+    </script>
+</body>
+</html>
